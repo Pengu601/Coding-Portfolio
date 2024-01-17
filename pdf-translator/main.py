@@ -4,6 +4,7 @@ import pytesseract
 from translate import Translator
 import requests
 from langdetect import detect
+from windowBuilder import *
 #from langdetect import detect_langs
 def main():
     string = "usted tiene unos ojos muy bonitos mi señora"
@@ -15,9 +16,7 @@ def main():
     translation = translator.translate(string)
     print(translation)
 
-
-
+    draw_Canvas()
     
-
 
 main()
