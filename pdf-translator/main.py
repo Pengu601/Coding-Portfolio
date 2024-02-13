@@ -35,12 +35,15 @@ def main():
         print("no file dropped")
     
     pdf_path = droppedFile
-    text_content = convert_scanned_pdf_to_text(pdf_path)
+    print(pdf_path)
+    # text_content = convert_scanned_pdf_to_text(pdf_path)
 
-    with open("output.txt", "w", encoding="utf-8") as output_file:
-        output_file.write(text_content)
+    # with open("output.txt", "w", encoding="utf-8") as output_file:
+    #     output_file.write(text_content)
 
-    print("Conversion complete. Text saved to output.txt.")
+    # print("Conversion complete. Text saved to output.txt.")
+
+
 
     # string = "usted tiene unos ojos muy bonitos mi señora"
     # baseLang = detect(string)
