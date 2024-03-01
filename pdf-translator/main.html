@@ -6,7 +6,16 @@
 <h1>heading</h1>
 
 <p> testing right now</p>
-<button> Press me</button>
+<button onclick="runScript()"> Press me</button>
+
+<script>
+    function runScript() {
+        var scriptPath = "C:\Users\Nick\OneDrive\Desktop\ \Portfolio\portfolio\pdf-translator\test.py";
+
+        subprocess.run(["python", scriptPath]);
+    }
+
+</script>
 
 </body>
 
