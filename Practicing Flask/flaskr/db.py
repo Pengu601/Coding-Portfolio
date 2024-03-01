@@ -15,3 +15,6 @@ def close_db(e=None): #checks if a connection was created by checking if g.db wa
     
     if db is not None: #if connection exists, close it
         db.close()
+
+def init_db():
+    
