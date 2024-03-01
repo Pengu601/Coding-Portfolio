@@ -16,12 +16,12 @@ def create_app(test_config=None):
         
     #ensure the instance folder exists
     try:
-        os.makedirs(app.instance_path)
+        os.makedirs(app.instance_path) #checks that the instance path exists, ask flask doesn't create the instance folder automatically
     except OSError:
         pass
     
     #a simple page that says hello
-    @app.route('/hello')
+    @app.route('/')
     def hello():
         return "Hello, World!"
     
