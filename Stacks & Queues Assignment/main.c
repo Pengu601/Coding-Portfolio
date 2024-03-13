@@ -157,6 +157,8 @@ int progressHour(Elephant* eleArr, int numEle, int** grid){
     int totalMelonsAte = 0;
     int row = 0;
     int col = 0;
+    int* tmpArray = (int*)malloc(numEle*sizeof(int));
+    
     for(int i = 0; i < numEle; i++){
         if (eleArr[i].memory.head != NULL) { // Ensure head is not NULL
             move(&(eleArr[i]), grid); //attempt to move elephants
