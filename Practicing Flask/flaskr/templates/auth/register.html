@@ -1,0 +1,15 @@
+{% extends 'base.html' %} <!-- replace the blocks from base template with below code-->
+
+{% block header %}
+    <h1>{%block title %} Register {% endblock %}</h1> <!-- Sets the title block and then output the value into header (both window and page share same title without writing twice)-->
+{% endblock %}
+
+{% block content %}
+    <form method = "post">
+        <label for= "username">Username</label>
+        <input name = "username" id = "username" required>
+        <label for = "password">Password</label>
+        <input type = "password" name = "password" id = "password" required>
+        <input type = "submit" value = "Register">
+    </form>
+{% endblock %}
