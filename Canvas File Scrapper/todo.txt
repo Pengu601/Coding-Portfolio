@@ -1,0 +1,14 @@
+TODO:
+- Practice Scrapping from website #DONE
+- integrating python files into other, then running exec with it
+
+canvas auth token: 1158~WVPhPyWU4Qve4ZwB9rFeBJkLG7Zy2L8u6FLFmwtxHvJDWhEVQmTUXNwEyRaJWVEr
+
+- be able to designate a folder location to place files
+- be able to scrape all downloadable files from a canvas modules directory
+- be able to designate multiple folders at a time into corresponding canvas pages
+- be able to create sub folders based on each different module in the canvas modules page
+
+SPECIFIC:
+    -Integrate path folder destination folder
+    -Download files from module to destination folder
