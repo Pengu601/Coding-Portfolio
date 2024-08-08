@@ -22,19 +22,13 @@ response = requests.get('https://webcourses.ucf.edu/api/v1/users/self/favorites/
 
 #check if authentication is successfull
 print(response.status_code)
-print()
 
 data = response.json() #turn the response into a json object to be able to store data
-print(data)
+
 courses = [] #stores course id
 for i in data:
     courses.append(i['id'])
     
-for course in courses:
-    print(course)
-    #getDueDates(course)
-    print() 
-
 downloadCourseFiles(courses[0])
 
 
