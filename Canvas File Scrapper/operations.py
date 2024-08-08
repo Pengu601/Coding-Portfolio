@@ -34,10 +34,9 @@ def downloadCourseFiles(courseID):
     
     progressBar = 0
     progressRequestRAW = requests.get(f'https://webcourses.ucf.edu/api/v1/progress/{progressID}', headers = headers)
-    # print(progressRequestRAW.status_code)
     progressRequest = progressRequestRAW.json()
-
-    print(progressRequest)
+    
+    
     #Until Download Completes, update progress completion
     while(progressBar != 100):
         time.sleep(2)
@@ -45,20 +44,20 @@ def downloadCourseFiles(courseID):
         progressRequest = progressRequestRAW.json()
         progressBar = progressRequest['completion']
         print(str(progressBar) + '%')
-        
     
-    
-    #gets url for content download
+    print(f'Success! Downloaded to {filePath}')
+
+    #gets paginated list for content export
     contentURLRAW = requests.get(f'https://webcourses.ucf.edu/api/v1/courses/{courseID}/content_exports/{contentID}', headers=headers)
-    # print(contentURL.status_code)
     contentURL = contentURLRAW.json()
-    print(contentURL)
     
+    #gets download url and file name from paginated list, and assign save path to the os to download the export to
     downloadURL = contentURL['attachment']['url']
     fileName = contentURL['attachment']['filename']
     savePath = os.path.join(filePath, fileName)
     
     downloadContent = requests.get(downloadURL)
+    
     #Download File from URL and save to Directory
     with open(savePath, 'wb') as file:
         file.write(downloadContent.content)
