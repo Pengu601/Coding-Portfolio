@@ -16,21 +16,18 @@ def getDueDates(courseID):
         
 def downloadCourseFiles(courseID):
     #get directory path of where user wants to download course files
-    filePath = askdirectory(title='Select Folder') #gets folder path for assignments to download to
-    # print(filePath)
+    filePath = askdirectory(title='Select Folder') 
     
     #get request to download content from course
     request = requests.post(f'https://webcourses.ucf.edu/api/v1/courses/{courseID}/content_exports', headers=headers, params= {'export_type': 'zip'} )
     # print(request.status_code)
     
     data = request.json()
-    print(data)
-    contentID = data['id']
-    print(contentID) #
+    contentID = data['id'] #ID for content export job
     
     #Gets progress for Content Download
     progressURL = data['progress_url']
-    progressID = progressURL.rsplit('/', 1)[-1]
+    progressID = progressURL.rsplit('/', 1)[-1] #gets the progress ID by taking the numbers after the last / in the url string
     
     progressBar = 0
     progressRequestRAW = requests.get(f'https://webcourses.ucf.edu/api/v1/progress/{progressID}', headers = headers)
