@@ -1,6 +1,7 @@
 import requests
 
 from operations import *
+# from authentication import *
 #headers used to get access to user account
 headers = {
     'Authorization': 'Bearer 1158~WVPhPyWU4Qve4ZwB9rFeBJkLG7Zy2L8u6FLFmwtxHvJDWhEVQmTUXNwEyRaJWVEr',
@@ -9,13 +10,6 @@ headers = {
 params = {
     'enrollment_state' : 'active', #used to only get courses that are currently active
 }
-
-# def getDueDates(courseID):
-#     request = requests.get("https://webcourses.ucf.edu/api/v1/courses/" + str(courseID) + "/permissions", headers=headers)
-#     data = request.json()
-#     for i in data:
-#         print(i)
-
 
 #Todo - make the header parameter a user input
 response = requests.get('https://webcourses.ucf.edu/api/v1/users/self/favorites/courses', headers=headers, params = params)
