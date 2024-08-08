@@ -18,9 +18,10 @@ def downloadCourseFiles(courseID):
     filePath = askdirectory(title='Select Folder') #gets folder path for assignments to download to
     print(filePath)
     
-    request = requests.get(f'https://webcourses.ucf.edu/api/v1/courses/{courseID}/content_exports', headers=headers, params={'export_type': 'zip', 'select': 'files'})
-    data = request.json()
+    request = requests.post(f'https://webcourses.ucf.edu/api/v1/courses/{courseID}/content_exports', headers=headers, params= {'export_type': 'zip'} )
+    print(request.status_code)
     
+    data = request.json()
     print(data)
     
     
