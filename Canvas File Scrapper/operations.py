@@ -1,20 +1,28 @@
 import requests
+from authentication import *
 from tkinter import Tk
 from tkinter.filedialog import askdirectory
 import time
 import os
 
-headers = {
-    'Authorization': 'Bearer 1158~WVPhPyWU4Qve4ZwB9rFeBJkLG7Zy2L8u6FLFmwtxHvJDWhEVQmTUXNwEyRaJWVEr',
-}
 
-def getDueDates(courseID):
+
+def getCourses(headers, params):
+    response = requests.get('https://webcourses.ucf.edu/api/v1/users/self/favorites/courses', headers=headers, params = params)
+    data = response.json()
+    courses = []
+    for i in data:
+        courses.append(i['id'])
+    return courses
+
+
+def getDueDates(courseID, headers):
     request = requests.get("https://webcourses.ucf.edu/api/v1/courses/" + str(courseID) + "/permissions", headers=headers)
     data = request.json()
     for i in data:
         print(i)
         
-def downloadCourseFiles(courseID):
+def downloadCourseFiles(courseID, headers):
     #get directory path of where user wants to download course files
     filePath = askdirectory(title='Select Folder') 
     

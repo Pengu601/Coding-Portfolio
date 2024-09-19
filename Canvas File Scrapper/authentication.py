@@ -1,4 +1,7 @@
 import requests
 
 def getToken():
-    bruh = 0
+    authToken = input("Please enter Token: ")
+    headers ={'Authorization': f'Bearer {authToken}'}
+    return headers
+
