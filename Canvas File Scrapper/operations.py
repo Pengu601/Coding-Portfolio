@@ -10,9 +10,11 @@ import os
 def getCourses(headers, params):
     response = requests.get('https://webcourses.ucf.edu/api/v1/users/self/favorites/courses', headers=headers, params = params)
     data = response.json()
+    print(data)
     courses = []
     for i in data:
         courses.append(i['id'])
+        courses.append(i['name'].rsplit('-', 1)[0])
     return courses
 
 
@@ -24,8 +26,8 @@ def getDueDates(courseID, headers):
         
 def downloadCourseFiles(courseID, headers):
     #get directory path of where user wants to download course files
-    filePath = askdirectory(title='Select Folder') 
-    
+    filePath = askdirectory(title='Select Folder to Download Course Files to') 
+    print('test')
     #get request to download content from course
     request = requests.post(f'https://webcourses.ucf.edu/api/v1/courses/{courseID}/content_exports', headers=headers, params= {'export_type': 'zip'} )
     # print(request.status_code)

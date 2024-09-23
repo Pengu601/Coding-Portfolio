@@ -1,6 +1,8 @@
 import requests
 from authentication import *
 from operations import *
+from operations import downloadCourseFiles
+from menu import *
 # from authentication import *
 #headers used to get access to user account
 # headers = {
@@ -9,10 +11,15 @@ from operations import *
 
 headers = getToken()
 #params used to filter for specific info 
+print(headers)
 params = {
     'enrollment_state' : 'active', #used to only get courses that are currently active
 }
 
+end = 0
+while(end != -1):
+    end = mainMenu(headers, params)
+    
 #Todo - make the header parameter a user input
 # response = requests.get('https://webcourses.ucf.edu/api/v1/users/self/favorites/courses', headers=headers, params = params)
 
@@ -24,7 +31,16 @@ params = {
 # courses = [] #stores course id
 # for i in data:
 #     courses.append(i['id'])
-courses = getCourses(headers, params)
-downloadCourseFiles(courses[0], headers)
+
+
+for i in range(len(courses)):
+    if (i) %2 == 0:
+        continue
+    print(courses[i])
+
+
+
+
+#downloadCourseFiles(courses[0], headers)
 
 
