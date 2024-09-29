@@ -33,10 +33,7 @@ while(end != -1):
 #     courses.append(i['id'])
 
 
-for i in range(len(courses)):
-    if (i) %2 == 0:
-        continue
-    print(courses[i])
+
 
 
 
