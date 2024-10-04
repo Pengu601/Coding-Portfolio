@@ -16,3 +16,4 @@ SPECIFIC:
 
 - Work on Authentication (OAuth2) to have user login with canvas login to auto-generate token for user 
 
+-implement google calender api to automatically create new event for assignment when downloading any new files from canvas

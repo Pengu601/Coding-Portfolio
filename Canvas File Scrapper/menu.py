@@ -2,10 +2,7 @@ from operations import *
 
 def mainMenu(headers, params):
     print("--------------------------------")
-    print("1. Courses")
-    print("2. TBD")    
-    print("3. TBD")
-    print("4. TBD")    
+    print("1. Courses")  
     print("5. Exit")
     print("--------------------------------")
     choice = input(">> ")
@@ -27,8 +24,8 @@ def courseFileMenu(headers, params):
     #     print(courses[i])
     while(1):
         print("--------------------------------")
-        print("1. Download Course Files")
-        print("2. TBD")    
+        print("1. Download Course Files (Course Specific)")
+        print("2. Download All Course Files")    
         print("3. TBD")
         print("4. TBD")    
         print("5. Exit")
