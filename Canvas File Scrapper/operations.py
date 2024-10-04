@@ -10,7 +10,7 @@ import os
 def getCourses(headers, params):
     response = requests.get('https://webcourses.ucf.edu/api/v1/users/self/favorites/courses', headers=headers, params = params)
     data = response.json()
-    print(data)
+    
     courses = []
     for i in data:
         courses.append(i['id'])
@@ -26,8 +26,11 @@ def getDueDates(courseID, headers):
         
 def downloadCourseFiles(courseID, headers):
     #get directory path of where user wants to download course files
+    root = Tk()
+    root.withdraw()
+    root.wm_attributes('-topmost', 1)
     filePath = askdirectory(title='Select Folder to Download Course Files to') 
-    print('test')
+
     #get request to download content from course
     request = requests.post(f'https://webcourses.ucf.edu/api/v1/courses/{courseID}/content_exports', headers=headers, params= {'export_type': 'zip'} )
     # print(request.status_code)
@@ -45,19 +48,24 @@ def downloadCourseFiles(courseID, headers):
     
     
     #Until Download Completes, update progress completion
-    while(progressBar != 100):
+    while(True):
         time.sleep(2)
         progressRequestRAW = requests.get(f'https://webcourses.ucf.edu/api/v1/progress/{progressID}', headers = headers)
         progressRequest = progressRequestRAW.json()
+        
         progressBar = progressRequest['completion']
         print(str(progressBar) + '%')
+        if(str(progressRequest['workflow_state']) == 'completed'):
+            break
     
-    print(f'Success! Downloaded to {filePath}')
+    
 
     #gets paginated list for content export
     contentURLRAW = requests.get(f'https://webcourses.ucf.edu/api/v1/courses/{courseID}/content_exports/{contentID}', headers=headers)
     contentURL = contentURLRAW.json()
+
     
+    print(contentURL)
     #gets download url and file name from paginated list, and assign save path to the os to download the export to
     downloadURL = contentURL['attachment']['url']
     fileName = contentURL['attachment']['filename']
@@ -68,6 +76,9 @@ def downloadCourseFiles(courseID, headers):
     #Download File from URL and save to Directory
     with open(savePath, 'wb') as file:
         file.write(downloadContent.content)
+    
+    print(f'Success! Downloaded to {filePath}')
+    root.destroy()
     
     
     
