@@ -16,7 +16,7 @@ def mainMenu(headers, params):
         
     
 def courseFileMenu(headers, params):
-    courses = getCourses(headers, params)
+    courses = getCourses(headers, params) #gets course names and the id corresponding to them
     
     # for i in range(len(courses)):
     #     if (i) %2 == 0:
