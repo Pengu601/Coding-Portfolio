@@ -51,7 +51,7 @@ def courseFileMenu(headers, params):
                     selectedCourse = courses[(choiceIndex*2)-1]
                     selectedCourseId = courses[(choiceIndex*2)-2]
                     print(f'You selected {selectedCourse}')
-                    downloadCourseFiles(selectedCourseId, headers)
+                    downloadCourseFiles(selectedCourseId, selectedCourse, headers)
                 else:
                     print("Invalid selection")
             except ValueError:

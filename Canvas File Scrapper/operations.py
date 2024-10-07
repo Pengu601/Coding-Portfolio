@@ -5,7 +5,7 @@ from tkinter.filedialog import askdirectory
 import time
 import os
 from tqdm import tqdm
-
+import zipfile
 
 
 def getCourses(headers, params):
@@ -25,7 +25,7 @@ def getDueDates(courseID, headers):
     for i in data:
         print(i)
         
-def downloadCourseFiles(courseID, headers):
+def downloadCourseFiles(courseID, courseName, headers):
     #get directory path of where user wants to download course files
     root = Tk()
     root.withdraw()
@@ -37,6 +37,7 @@ def downloadCourseFiles(courseID, headers):
     # print(request.status_code)
     
     data = request.json()
+    print(data)
     contentID = data['id'] #ID for content export job
     
     #Gets progress for Content Download
@@ -49,16 +50,24 @@ def downloadCourseFiles(courseID, headers):
     
     
     #Until Download Completes, update progress completion
+    if100 = 0
     while(True):
         time.sleep(2)
         progressRequestRAW = requests.get(f'https://webcourses.ucf.edu/api/v1/progress/{progressID}', headers = headers)
         progressRequest = progressRequestRAW.json()
         
         progressBar = progressRequest['completion']
-        print(str(progressBar) + '%')
+
         if(str(progressRequest['workflow_state']) == 'completed'):
             break
-    
+        
+        if(if100 == 1):
+            continue
+        
+        if(progressBar == '100'):
+            if100 = 1
+        print(str(progressBar) + '%')
+
     
 
     #gets paginated list for content export
@@ -66,7 +75,7 @@ def downloadCourseFiles(courseID, headers):
     contentURL = contentURLRAW.json()
 
     
-    print(contentURL)
+    # print(contentURL)
     #gets download url and file name from paginated list, and assign save path to the os to download the export to
     downloadURL = contentURL['attachment']['url']
     fileName = contentURL['attachment']['filename']
@@ -93,6 +102,18 @@ def downloadCourseFiles(courseID, headers):
                     pbar.update(len(chunk))  # Update progress bar with chunk size
     
     print(f'Success! Downloaded to {filePath}')
+
+    extractedFolder = os.path.splitext(fileName)[0]
+    newPath = os.path.join(filePath, extractedFolder)
+    if not os.path.exists(newPath):
+        os.makedirs(newPath)
+
+    with zipfile.ZipFile(savePath,'r') as zip_ref:
+        zip_ref.extractall(newPath)
+
+
+    os.rename(newPath, os.path.join(filePath, courseName ))
+    os.remove(savePath)
     os.startfile(filePath)
     root.destroy()
     
