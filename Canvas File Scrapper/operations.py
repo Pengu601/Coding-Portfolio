@@ -83,10 +83,6 @@ def downloadCourseFiles(courseID, courseName, headers):
     
     # downloadContent = requests.get(downloadURL)
     
-    # #Download File from URL and save to Directory
-    # with open(savePath, 'wb') as file:
-    #     file.write(downloadContent.content)
-    
     with requests.get(downloadURL, stream=True) as downloadContent:
         # Get the total file size from the headers
         total_size = int(downloadContent.headers.get('content-length', 0))
@@ -103,16 +99,17 @@ def downloadCourseFiles(courseID, courseName, headers):
     
     print(f'Success! Downloaded to {filePath}')
 
-    extractedFolder = os.path.splitext(fileName)[0]
-    newPath = os.path.join(filePath, extractedFolder)
+    extractedFolder = os.path.splitext(fileName)[0] #Get name for extracted folder to be created
+    newPath = os.path.join(filePath, extractedFolder)  #gets the new path for the extract folder
     if not os.path.exists(newPath):
-        os.makedirs(newPath)
+        os.makedirs(newPath) #if folder doesnt already exist, create it
 
     with zipfile.ZipFile(savePath,'r') as zip_ref:
-        zip_ref.extractall(newPath)
+        zip_ref.extractall(newPath) #extract downloaded zip contents to folder
 
-
-    os.rename(newPath, os.path.join(filePath, courseName ))
+    if not os.path.isdir(os.path.join(filePath, courseName)):
+        os.rename(newPath, os.path.join(filePath, courseName )) #rename the folder to course name if not already
+    
     os.remove(savePath)
     os.startfile(filePath)
     root.destroy()
