@@ -4,6 +4,7 @@ from tkinter import Tk
 from tkinter.filedialog import askdirectory
 import time
 import os
+from tqdm import tqdm
 
 
 
@@ -71,13 +72,28 @@ def downloadCourseFiles(courseID, headers):
     fileName = contentURL['attachment']['filename']
     savePath = os.path.join(filePath, fileName)
     
-    downloadContent = requests.get(downloadURL)
+    # downloadContent = requests.get(downloadURL)
     
-    #Download File from URL and save to Directory
-    with open(savePath, 'wb') as file:
-        file.write(downloadContent.content)
+    # #Download File from URL and save to Directory
+    # with open(savePath, 'wb') as file:
+    #     file.write(downloadContent.content)
+    
+    with requests.get(downloadURL, stream=True) as downloadContent:
+        # Get the total file size from the headers
+        total_size = int(downloadContent.headers.get('content-length', 0))
+        
+        # Open the file to write in binary mode
+        with open(savePath, 'wb') as file, tqdm(
+            total=total_size, unit='B', unit_scale=True, desc=f"Writing {fileName} to Directory", ascii=True
+        ) as pbar:
+            # Iterate over the response in chunks
+            for chunk in downloadContent.iter_content(chunk_size=1024):
+                if chunk:  # filter out keep-alive chunks
+                    file.write(chunk)
+                    pbar.update(len(chunk))  # Update progress bar with chunk size
     
     print(f'Success! Downloaded to {filePath}')
+    os.startfile(filePath)
     root.destroy()
     
     
