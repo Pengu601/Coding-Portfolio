@@ -8,6 +8,13 @@ import sys
 from tqdm import tqdm
 import zipfile
 
+def clearTerminal():
+    if os.name == 'nt':
+        os.system('cls')
+
+    # For Linux/macOS
+    else:
+        os.system('clear')
 
 def getCourses(headers, params):
     response = requests.get('https://webcourses.ucf.edu/api/v1/users/self/favorites/courses', headers=headers, params = params)
@@ -19,38 +26,36 @@ def getCourses(headers, params):
         courses.append(i['name'].rsplit('-', 1)[0])
     return courses
 
-
 def getDueDates(courseID, headers):
     request = requests.get("https://webcourses.ucf.edu/api/v1/courses/" + str(courseID) + "/permissions", headers=headers)
     data = request.json()
     for i in data:
         print(i)
         
-def downloadCourseFiles(courseID, courseName, headers):
+def downloadCourseFiles(courseID, courseName, headers, filePath, courseCount, courseAmount):
     #get directory path of where user wants to download course files
     root = Tk()
     root.withdraw()
     root.wm_attributes('-topmost', 1)
-    filePath = askdirectory(title='Select Folder to Download Course Files to') 
+    
+    if(courseAmount == 1):
+        print(f'You selected {courseName}')
+        
+    if(filePath == "0"):
+        filePath = askdirectory(title='Select Folder to Download Course Files to') 
 
     #get request to download content from course
     request = requests.post(f'https://webcourses.ucf.edu/api/v1/courses/{courseID}/content_exports', headers=headers, params= {'export_type': 'zip'} )
-    # print(request.status_code)
-    
+
     data = request.json()
-    print(data)
+    
     contentID = data['id'] #ID for content export job
     
     #Gets progress for Content Download
     progressURL = data['progress_url']
     progressID = progressURL.rsplit('/', 1)[-1] #gets the progress ID by taking the numbers after the last / in the url string
     
-    progressBar = 0
-    progressRequestRAW = requests.get(f'https://webcourses.ucf.edu/api/v1/progress/{progressID}', headers = headers)
-    progressRequest = progressRequestRAW.json()
-    
-    
-    #Until Download Completes, update progress completion
+    #Until Download to server Completes, update progress completion
     if100 = 0
     while(True): 
         progressRequestRAW = requests.get(f'https://webcourses.ucf.edu/api/v1/progress/{progressID}', headers = headers)
@@ -66,12 +71,12 @@ def downloadCourseFiles(courseID, courseName, headers):
         
         if(progressBar == '100'):
             if100 = 1
-        sys.stdout.write(f"\r {progressBar}%")
+        sys.stdout.write(f"\rDownloading... {int(progressBar)}%")
         sys.stdout.flush()
         time.sleep(.05)
         
 
-    #gets paginated list for content export
+    #gets paginated list containing url needed for content download
     contentURLRAW = requests.get(f'https://webcourses.ucf.edu/api/v1/courses/{courseID}/content_exports/{contentID}', headers=headers)
     contentURL = contentURLRAW.json()
 
@@ -95,14 +100,14 @@ def downloadCourseFiles(courseID, courseName, headers):
                     file.write(chunk)
                     pbar.update(len(chunk))  # Update progress bar with chunk size
     
-    print(f'Success! Downloaded to {filePath}')
-
-   
-    extractFileContents(savePath, filePath, courseName)
+    extractFileContents(savePath, filePath, courseName, courseCount, courseAmount) #Unzips and rename file to course name
     
+    print(f'Success! Downloaded and Extracted to {filePath}')
+    
+    time.sleep(3)
     root.destroy()
     
-def extractFileContents(savePath, filePath, courseName):
+def extractFileContents(savePath, filePath, courseName, courseCount, courseAmount):
     newPath = os.path.join(filePath, courseName)  #gets the new path for the extract folder
     
     if not os.path.exists(newPath):
@@ -112,6 +117,7 @@ def extractFileContents(savePath, filePath, courseName):
         zip_ref.extractall(newPath) #extract downloaded zip contents to folder
     
     os.remove(savePath)
-    os.startfile(filePath)
+    if(courseCount == courseAmount):
+        os.startfile(filePath)
     
     
