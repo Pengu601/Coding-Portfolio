@@ -25,13 +25,7 @@ def getCourses(headers, params):
         courses.append(i['id'])
         courses.append(i['name'].rsplit('-', 1)[0])
     return courses
-
-def getDueDates(courseID, headers):
-    request = requests.get("https://webcourses.ucf.edu/api/v1/courses/" + str(courseID) + "/permissions", headers=headers)
-    data = request.json()
-    for i in data:
-        print(i)
-        
+   
 def downloadCourseFiles(courseID, courseName, headers, filePath, courseCount, courseAmount):
     #get directory path of where user wants to download course files
     root = Tk()
@@ -39,9 +33,9 @@ def downloadCourseFiles(courseID, courseName, headers, filePath, courseCount, co
     root.wm_attributes('-topmost', 1)
     
     if(courseAmount == 1):
-        print(f'You selected {courseName}')
+        print(f'You selected {courseName}') #if single course download, display name of course
         
-    if(filePath == "0"):
+    if(filePath == "0"): #if single course download, get filePath
         filePath = askdirectory(title='Select Folder to Download Course Files to') 
 
     #get request to download content from course
@@ -57,6 +51,7 @@ def downloadCourseFiles(courseID, courseName, headers, filePath, courseCount, co
     
     #Until Download to server Completes, update progress completion
     if100 = 0
+    
     while(True): 
         progressRequestRAW = requests.get(f'https://webcourses.ucf.edu/api/v1/progress/{progressID}', headers = headers)
         progressRequest = progressRequestRAW.json()
@@ -71,7 +66,7 @@ def downloadCourseFiles(courseID, courseName, headers, filePath, courseCount, co
         
         if(progressBar == '100'):
             if100 = 1
-        sys.stdout.write(f"\rDownloading... {int(progressBar)}%")
+        sys.stdout.write(f"\rDownloading... {int(progressBar)}%") #Displays download progress
         sys.stdout.flush()
         time.sleep(.05)
         
@@ -86,7 +81,7 @@ def downloadCourseFiles(courseID, courseName, headers, filePath, courseCount, co
     fileName = contentURL['attachment']['filename']
     savePath = os.path.join(filePath, fileName)
     
-    with requests.get(downloadURL, stream=True) as downloadContent:
+    with requests.get(downloadURL, stream=True) as downloadContent: #progress bar for extracting to directory
         # Get the total file size from the headers
         total_size = int(downloadContent.headers.get('content-length', 0))
         
@@ -116,8 +111,9 @@ def extractFileContents(savePath, filePath, courseName, courseCount, courseAmoun
     with zipfile.ZipFile(savePath,'r') as zip_ref:
         zip_ref.extractall(newPath) #extract downloaded zip contents to folder
     
-    os.remove(savePath)
-    if(courseCount == courseAmount):
+    os.remove(savePath) #remove zip file
+    
+    if(courseCount == courseAmount): #open directory only if all course files are downlaoded
         os.startfile(filePath)
     
     
