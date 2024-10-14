@@ -9,6 +9,7 @@ from tqdm import tqdm
 import zipfile
 
 def clearTerminal():
+    # time.sleep(10)
     if os.name == 'nt':
         os.system('cls')
 
@@ -16,6 +17,21 @@ def clearTerminal():
     else:
         os.system('clear')
 
+def tokenToUser(token):
+    headers ={'Authorization': f'Bearer {token}'}
+    response = requests.get('https://webcourses.ucf.edu/api/v1/users/self/favorites/courses', headers=headers)
+    data = response.json()
+    # print(data)
+    
+    userId= data[0]['enrollments'][0]['user_id'] #gets the user id found from course enrollments
+    # print(userId)
+    
+    response = requests.get(f'https://webcourses.ucf.edu/api/v1/users/{userId}/profile', headers= headers) #gets user profile info
+    data = response.json()
+    
+    
+    return data['name'] #returns the name associated to user profile (id)
+    
 def getCourses(headers, params):
     response = requests.get('https://webcourses.ucf.edu/api/v1/users/self/favorites/courses', headers=headers, params = params)
     data = response.json()
