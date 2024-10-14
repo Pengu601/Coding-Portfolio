@@ -6,7 +6,6 @@ def main():
     
     headers = getToken() #gets auth token from user
     
-
     params = {
         'enrollment_state' : 'active', #used to only get courses that are currently active
     } 

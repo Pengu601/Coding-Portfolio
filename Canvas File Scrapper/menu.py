@@ -3,8 +3,8 @@ from tkinter.filedialog import askdirectory
 from tkinter import Tk
 
 def mainMenu(headers, params):
-    # For Windows
-    clearTerminal()
+
+    clearTerminal() #clears the terminal output
     
     print("--------------------------------")
     print("1. Courses")  
@@ -15,7 +15,7 @@ def mainMenu(headers, params):
     if(choice == '1'):
         courseFileMenu(headers, params)
     
-    if(choice == '5'):
+    if(choice == '5'): #exits the program
         return -1
         
     

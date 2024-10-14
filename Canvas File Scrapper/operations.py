@@ -7,7 +7,6 @@ import os
 import sys
 from tqdm import tqdm
 import zipfile
-import webbrowser
 
 def clearTerminal():
     # time.sleep(10)
@@ -18,29 +17,28 @@ def clearTerminal():
     else:
         os.system('clear')
 
-def tokenToUser(token):
+def tokenToUser(token): #takes the Auth token and returns the user's name associated with it
     headers ={'Authorization': f'Bearer {token}'}
     response = requests.get('https://webcourses.ucf.edu/api/v1/users/self/favorites/courses', headers=headers)
     data = response.json()
-    # print(data)
     
     userId= data[0]['enrollments'][0]['user_id'] #gets the user id found from course enrollments
-    # print(userId)
     
     response = requests.get(f'https://webcourses.ucf.edu/api/v1/users/{userId}/profile', headers= headers) #gets user profile info
     data = response.json()
     
-    
     return data['name'] #returns the name associated to user profile (id)
     
+#gets all the course names and the Course ID associated with it
 def getCourses(headers, params):
     response = requests.get('https://webcourses.ucf.edu/api/v1/users/self/favorites/courses', headers=headers, params = params)
     data = response.json()
     
     courses = []
-    for i in data:
+    for i in data: #appends the id of course then the course name into array
         courses.append(i['id'])
         courses.append(i['name'].rsplit('-', 1)[0])
+
     return courses
    
 def downloadCourseFiles(courseID, courseName, headers, filePath, courseCount, courseAmount):
@@ -69,12 +67,13 @@ def downloadCourseFiles(courseID, courseName, headers, filePath, courseCount, co
     #Until Download to server Completes, update progress completion
     if100 = 0
     
+    #Displays download progress for requestion content export
     while(True): 
         progressRequestRAW = requests.get(f'https://webcourses.ucf.edu/api/v1/progress/{progressID}', headers = headers)
         progressRequest = progressRequestRAW.json()
-        progressBar = progressRequest['completion']
+        progressBar = progressRequest['completion'] #gets the current percentage of the download progress
 
-        if(str(progressRequest['workflow_state']) == 'completed'):
+        if(str(progressRequest['workflow_state']) == 'completed'): #if the file isn't ready to be downloaded, keep stalling
             time.sleep(1)
             break
         
@@ -92,11 +91,10 @@ def downloadCourseFiles(courseID, courseName, headers, filePath, courseCount, co
     contentURLRAW = requests.get(f'https://webcourses.ucf.edu/api/v1/courses/{courseID}/content_exports/{contentID}', headers=headers)
     contentURL = contentURLRAW.json()
 
-    # print(contentURL)
     #gets download url and file name from paginated list, and assign save path to the os to download the export to
     downloadURL = contentURL['attachment']['url']
     fileName = contentURL['attachment']['filename']
-    savePath = os.path.join(filePath, fileName)
+    savePath = os.path.join(filePath, fileName) #path to store file into
     
     with requests.get(downloadURL, stream=True) as downloadContent: #progress bar for extracting to directory
         # Get the total file size from the headers
