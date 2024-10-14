@@ -7,6 +7,7 @@ import os
 import sys
 from tqdm import tqdm
 import zipfile
+import webbrowser
 
 def clearTerminal():
     # time.sleep(10)
